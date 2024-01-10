@@ -34,7 +34,7 @@ def find_numbers_with_symbols(grid, symbols):
                     #number_str = row[col_no:col_no_max + 1]
                     number_str = ''.join(row[col_no:col_no_max + 1])
                     number = int(number_str)
-                    numbers_with_symbols.append((number, nearby_symbols, symbol_position))
+                    numbers_with_symbols.append((number, nearby_symbols[0], symbol_position[0]))
 
                 # Update the column pointer
                 col_no = col_no_max + 1
@@ -65,30 +65,54 @@ def main():
         
     # Call the function to find numbers with nearby symbols
     result = find_numbers_with_symbols(grid, unique_symbols)
+    
+
+    # Part 1
     sum_of_part_numbers = 0
+    for number, symbols, coordinate in result:
+        #print(f"Number {number} has nearby symbols: {', '.join(symbols)}")
+        sum_of_part_numbers += number
+    
+    # Part 2
+    # Finding all tuples where the symbol is a '*' -> possible_gears
+    possible_gears = []
+    for tup in result:
+        if tup[1][0] == '*':
+            possible_gears.append(tup[2])
 
-    print(result)
+    gears = []
+    # Append the gear coordinate where the '*' is adjecent to exactly two numbers
+    for pg in set(possible_gears):
+        if possible_gears.count(pg) == 2:
+            gears.append(pg)
 
-    # # Print the result
-    # for number, symbols in result:
-    #     print(f"Number {number} has nearby symbols: {', '.join(symbols)}")
-    #     sum_of_part_numbers += number
+    # Extract the pairwise numbers for each gear
+    pairwise_product = []
+    for gear in gears:
+        current_pair = []
+        for tup in result:
+            if tup[2] == gear:
+                current_pair.append(tup[0])
+        
+
+        pairwise_product.append(current_pair[0]*current_pair[1])
+            
+    sum_of_gear_ratios = sum(pairwise_product)
 
 
-    # print("Part 1")
-    # print(f"The sum of all the part numbers are {sum_of_part_numbers}")
-    # print()
+    print("Part 1")
+    print(f"The sum of all the part numbers are {sum_of_part_numbers}")
+    print()
+
+    print("Part 2")
+    print(f"The sum of all the gear ratios are {sum_of_gear_ratios}")
+    print()
 
    
             
 if __name__ == "__main__":
     main()
 
-#  Jeg lurte på om vi skulle spille litt mer på magefølelse-temaet?
-# Jeg kan printe ut noen kort med logoen vår med en QR-kode bakpå. Det blir et lotteri hvor man i ren tekstform får beskjed om hva man har vunnet:
-# - klem fra Stein
-# - planke fra Lise Maren
-# -
 
  # print("Part 2")
     # print(f"The sum of all the powers are {sum(power_sum)}")
